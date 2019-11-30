@@ -1,6 +1,8 @@
 package com.zzy.compare.util;
 
 
+import com.zzy.compare.mid.OrderMapper;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -2114,7 +2116,19 @@ shorttext.substring(0, j));
      * 与此差异操作关联的文本。
      */
     public String text;
- 
+
+    /*
+     * 旧文档对应的编号
+     * */
+    private Integer oldOrder;
+
+
+    /*
+     * 新文档对应的编号
+     * */
+    private Integer newOrder;
+
+
     /**
      * Constructor.  Initializes the diff with the provided values.
      * @param operation One of INSERT, DELETE or EQUAL.
@@ -2125,8 +2139,31 @@ shorttext.substring(0, j));
       this.operation = operation;
       this.text = text;
     }
- 
- 
+
+    public Diff(Operation operation, String text, Integer oldOrder, Integer newOrder) {
+      this.operation = operation;
+      this.text = text;
+      this.oldOrder = oldOrder;
+      this.newOrder = newOrder;
+    }
+
+
+    public Integer getOldOrder() {
+      return oldOrder;
+    }
+
+    public void setOldOrder(Integer oldOrder) {
+      this.oldOrder = oldOrder;
+    }
+
+    public Integer getNewOrder() {
+      return newOrder;
+    }
+
+    public void setNewOrder(Integer newOrder) {
+      this.newOrder = newOrder;
+    }
+
     /**
      * Display a human-readable version of this Diff.
      * @return text version.

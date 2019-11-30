@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="02793285-510f-4c22-8b6b-2be113348aad" name="Default Changelist" comment="" />
+    <list default="true" id="02793285-510f-4c22-8b6b-2be113348aad" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/mid/OrderMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zzy/compare/msg/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/msg/Block.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zzy/compare/util/Diff_match_patch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/util/Diff_match_patch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zzy/compare/util/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/util/Util.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/zzy/compare/msg/Block.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/zzy/compare/msg/Block.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/zzy/compare/util/Util.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/zzy/compare/util/Util.class" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,8 +25,13 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1TuFvLta9R4LoiycvwlvJK7tNUt" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -112,28 +126,32 @@
       <workItem from="1574729061831" duration="11321000" />
       <workItem from="1574815567830" duration="4931000" />
       <workItem from="1574902014351" duration="25516000" />
-      <workItem from="1574988244393" duration="2374000" />
+      <workItem from="1574988244393" duration="23334000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/zzy/compare/util/Util.java</url>
-          <line>108</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="t.get(6)" />
         <watch expression="t.get(2)" />
         <watch expression="t.get(8)" />
+        <watch expression="((TreeMap.Entry)((TreeMap)((PinyinScorer)suggester.scorerList.get(2)).storage).entrySet().toArray()[0]).getValue()" custom="java.util.TreeMap,java.util.TreeMap.Entry,com.hankcs.hanlp.suggest.scorer.pinyin.PinyinScorer" />
+        <watch expression="oldCount" />
       </configuration>
     </watches-manager>
   </component>

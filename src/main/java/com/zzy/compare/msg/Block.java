@@ -5,6 +5,7 @@ import java.math.BigInteger;
 public class Block {
     private Integer first;
     private Integer last;
+    private Integer key;
     private BigInteger hashCode;
 
     public Integer getFirst() {
@@ -31,11 +32,20 @@ public class Block {
         this.hashCode = hashCode;
     }
 
+    public Integer getKey() {
+        return key;
+    }
+
+    public void setKey(Integer key) {
+        this.key = key;
+    }
+
     @Override
     public String toString() {
         return "Block{" +
                 "first=" + first +
                 ", last=" + last +
+                ", key=" + key +
                 ", hashCode=" + hashCode +
                 '}';
     }

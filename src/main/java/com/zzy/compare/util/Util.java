@@ -4,7 +4,7 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
-import com.zzy.compare.mid.Diff;
+import com.hankcs.hanlp.suggest.Suggester;
 import com.zzy.compare.msg.Block;
 import com.zzy.compare.vo.Vo;
 import org.docx4j.jaxb.Context;
@@ -122,23 +122,79 @@ public class Util {
                 System.out.println("用户提交的文档删除了剩余的块");
             }
         }else{
-            //找到两个文本之间的差异
-            int a = oldBlockMap.size()>=newBlockMap.size() ? newBlockMap.size():oldBlockMap.size();
-            for(int b = 0;b<a;b++){
-                String s1 = blockToBigString(oldBlockMap.get(b+1), listOld);
-                String s2 = blockToBigString(newBlockMap.get(b+1), listNew);
-                LinkedList<Diff_match_patch.Diff> t = dmp.diff_main(s1,s2);
 
 
-                for (Diff_match_patch.Diff diff : t) {
-                    Vo v = new Vo();
-                    v.setKey(diff.operation.toString());
-                    v.setValue(diff.text);
-                    diffList.add(v);
-                    System.out.println("first:key="+diff.operation.toString() + ",value="+diff.text);
+            //在两个文件剩下的块之中筛选出要对比的两块,并把块编号映射保存到map中
+            //左边为旧文档对应的编号，右边为新的对应的编号
+            HashMap<Integer, Integer> numTonum = new HashMap<>();
+            Suggester suggester = new Suggester();
+            //把块数多的放入suggester
+            if((newBlockMap.size() >= oldBlockMap.size() ? newBlockMap : oldBlockMap) == newBlockMap){
+                for (Map.Entry<Integer,Block> map: newBlockMap.entrySet()) {
+                    String block = map.getValue().getKey()+blockToBigString(map.getValue(),listNew);
+                    suggester.addSentence(block);
+                }
+                //拿块数少的来和多的比较
+                for (Map.Entry<Integer,Block> map:oldBlockMap.entrySet()) {
+                    String block = blockToBigString(map.getValue(), listOld);
+                    List<String> suggest = suggester.suggest(block, 1);
+                    numTonum.put(map.getValue().getKey(),Integer.parseInt(String.valueOf(suggest.get(0).charAt(0))));
+                }
+            }else {
+                for (Map.Entry<Integer,Block> map: oldBlockMap.entrySet()) {
+                    String block = map.getValue().getKey()+blockToBigString(map.getValue(),listOld);
+                    suggester.addSentence(block);
+                }
+                //拿块数少的来和多的比较
+                for (Map.Entry<Integer,Block> map:newBlockMap.entrySet()) {
+                    String block = blockToBigString(map.getValue(), listNew);
+                    List<String> suggest = suggester.suggest(block, 1);
+                    numTonum.put(Integer.parseInt(String.valueOf(suggest.get(0).charAt(0))),map.getValue().getKey());
                 }
             }
+            System.out.println(numTonum);
+            for (Map.Entry<Integer,Integer> entry:numTonum.entrySet()) {
+                Integer oldOrder = entry.getKey();
+                Integer newOrder = entry.getValue();
+                String s1 = blockToBigString(oldBlockMap.get(oldOrder), listOld);
+                String s2 = blockToBigString(newBlockMap.get(newOrder), listNew);
+                LinkedList<Diff_match_patch.Diff> t = dmp.diff_main(s1,s2);
+                t.get(0).setOldOrder(oldOrder);
+                t.get(0).setNewOrder(newOrder);
+                System.out.println("====================================================");
+                System.out.println("旧文档第"+ oldOrder +"块"+"和新文档第"+ newOrder + "块比较");
+                System.out.println(t);
+                System.out.println("============================================");
+
+                //继续对块信息进行移除移除
+
+            }
+            if(oldBlockMap.size() > newBlockMap.size()){  //新文档较源文档删除了原文档那些块
+
+            } else if (oldBlockMap.size() < newBlockMap.size()){   //旧文档较源文档删除了原文档那些块
+
+            }
+
+
+
+//            //找到两个文本之间的差异
+//            int a = oldBlockMap.size()>=newBlockMap.size() ? newBlockMap.size():oldBlockMap.size();
+//            for(int b = 0;b<a;b++){
+//                String s1 = blockToBigString(oldBlockMap.get(b+1), listOld);
+//                String s2 = blockToBigString(newBlockMap.get(b+1), listNew);
+//                LinkedList<Diff_match_patch.Diff> t = dmp.diff_main(s1,s2);
+//
+//
+//                for (Diff_match_patch.Diff diff : t) {
+//                    Vo v = new Vo();
+//                    v.setKey(diff.operation.toString());
+//                    v.setValue(diff.text);
+//                    diffList.add(v);
+//                    System.out.println("first:key="+diff.operation.toString() + ",value="+diff.text);
+//                }
+//            }
         }
+
 
 
 
@@ -170,6 +226,42 @@ public class Util {
 //            BigInteger new64Hash = hashUnsigned(newBlockString);
 //        }
 
+    }
+
+
+
+    //在两个文件剩下的块之中筛选出要对比的两块,并把块编号映射保存到map中
+    private HashMap<Integer,Integer> selectToCompare(Map<Integer,Block> newBlockMap,Map<Integer,Block> oldBlockMap,List listNew,List listOld){
+        HashMap<Integer,Integer> numTonum = new HashMap<>();
+
+        Suggester suggester = new Suggester();
+
+        //把块数多的放入suggester
+        if((newBlockMap.size() >= oldBlockMap.size() ? newBlockMap : oldBlockMap) == newBlockMap){
+            for (Map.Entry<Integer,Block> map: newBlockMap.entrySet()) {
+                String block = map.getValue().getKey()+blockToBigString(map.getValue(),listNew);
+                suggester.addSentence(block);
+            }
+            //拿块数少的来和多的比较
+            for (Map.Entry<Integer,Block> map:oldBlockMap.entrySet()) {
+                String block = blockToBigString(map.getValue(), listOld);
+                List<String> suggest = suggester.suggest(block, 1);
+                numTonum.put(map.getValue().getKey(),Integer.parseInt(String.valueOf(suggest.get(0).charAt(0))));
+            }
+        }else {
+            for (Map.Entry<Integer,Block> map: oldBlockMap.entrySet()) {
+                String block = map.getValue().getKey()+blockToBigString(map.getValue(),listOld);
+                suggester.addSentence(block);
+            }
+            //拿块数少的来和多的比较
+            for (Map.Entry<Integer,Block> map:newBlockMap.entrySet()) {
+                String block = blockToBigString(map.getValue(), listNew);
+                List<String> suggest = suggester.suggest(block, 1);
+                numTonum.put(map.getValue().getKey(),Integer.parseInt(String.valueOf(suggest.get(0).charAt(0))));
+            }
+        }
+
+        return numTonum;
     }
 
 
@@ -309,7 +401,7 @@ public class Util {
         if (null == list) return null;
 
         int i = 0;
-        int key = 0;
+        int key = 1;
 
         int tag = -1;  //标志位，为1时则还在标记，为-1时则标记完成
 
@@ -322,8 +414,10 @@ public class Util {
                 if (tag == 1) {
                     tag = -1;
                     block.setLast(i);
-                    map.put(++key, block);
+                    block.setKey(key);
+                    map.put(key, block);
                     block = null;
+                    key++;
                     i++;
                 } else {
                     i++;
@@ -333,8 +427,10 @@ public class Util {
                     if (i == size - 1) {  //如果此时为最后一行，则标记结束
                         tag = -1;
                         block.setLast(i + 1);
-                        map.put(++key, block);
+                        block.setKey(key);
+                        map.put(key, block);
                         block = null;
+                        key++;
                         i++;
                     } else {
                         i++;
@@ -343,8 +439,10 @@ public class Util {
                     if (i == size - 1) {
                         block.setFirst(i + 1);
                         block.setLast(i + 1);
-                        map.put(++key, block);
+                        block.setKey(key);
+                        map.put(key, block);
                         block = null;
+                        key++;
                         i++;
                     } else {
                         tag = 1;
