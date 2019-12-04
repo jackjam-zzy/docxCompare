@@ -7,6 +7,11 @@
     <groupId>com.zzy</groupId>
     <artifactId>compare</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+
+
+
+
     <build>
         <plugins>
             <plugin>
@@ -20,20 +25,35 @@
         </plugins>
     </build>
 
+
+
     <dependencies>
 
+
+        <!--集合操作类-->
+        <!-- https://mvnrepository.com/artifact/commons-collections/commons-collections -->
         <dependency>
-            <groupId>com.hankcs</groupId>
-            <artifactId>hanlp</artifactId>
-            <version>portable-1.3.4</version>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.2</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
+            <version>3.5</version>
         </dependency>
+
+        <!--bean实体注解工具包-->
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
+            <scope>provided</scope>
+        </dependency>
+
 
 
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
@@ -58,10 +78,14 @@
             <artifactId>hanlp</artifactId>
             <version>portable-1.7.5</version>
         </dependency>
+
+
+        <!--一个操作Resources资源的框架FileHelper-->
+        <dependency>
+            <groupId>cn.yueshutong</groupId>
+            <artifactId>FileHelper</artifactId>
+            <version>1.0.RELEASE</version>
+        </dependency>
+
     </dependencies>
-
-
-
-
-
 </project>

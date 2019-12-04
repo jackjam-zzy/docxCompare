@@ -1,5 +1,4 @@
 package com.zzy.compare.util;
-
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.Dijkstra.DijkstraSegment;
 import com.hankcs.hanlp.seg.Segment;
@@ -41,11 +40,40 @@ public class Util {
         System.out.println(zzy.similarity(oldPath,newPath));
 
 
+
+
+
         //读取旧文档内容
         WordprocessingMLPackage wordMLPackageOld = WordprocessingMLPackage.load(new File(oldPath));
         MainDocumentPart mainDocumentPartOld = wordMLPackageOld.getMainDocumentPart();
         ObjectFactory oldFactory = Context.getWmlObjectFactory();
         List<Object> listOld = mainDocumentPartOld.getContent();
+
+        //cyb
+        AddComment addComment=new AddComment();
+        WordprocessingMLPackage wordprocessingMLPackage_bin =addComment.createWordprocessingMLPackage();
+        MainDocumentPart mainDocumentPart_bin = wordprocessingMLPackage_bin.getMainDocumentPart();  // mp9,获得这个文档的document与标签对象
+        ObjectFactory factory_bin = Context.getWmlObjectFactory();     //工厂类，可创建各种标签对象
+
+        P p_bin = factory_bin.createP();
+        BigInteger commentId_bin = BigInteger.valueOf(0); //从0开始
+
+        CommentsPart commentsPart_bin = new CommentsPart();
+        wordprocessingMLPackage_bin.getMainDocumentPart().addTargetPart(commentsPart_bin);  //wordMLPackage9 加上 cp
+        Comments comments_bin = factory_bin.createComments();
+        commentsPart_bin.setJaxbElement(comments_bin);
+        //cyb
+
+
+//        P p_bin = oldFactory.createP();
+//        BigInteger commentId_bin = BigInteger.valueOf(0); //从0开始
+//
+//        CommentsPart commentsPart_bin = new CommentsPart();
+//        wordMLPackageOld.getMainDocumentPart().addTargetPart(commentsPart_bin);  //wordMLPackage9 加上 cp
+//        Comments comments_bin = oldFactory.createComments();
+//        commentsPart_bin.setJaxbElement(comments_bin);
+
+
         //读取新文档的内容
         WordprocessingMLPackage wordMLPackageNew = WordprocessingMLPackage.load(new File(newPath));
         MainDocumentPart mainDocumentPartNew = wordMLPackageNew.getMainDocumentPart();
@@ -53,8 +81,6 @@ public class Util {
         List<Object> listNew = mainDocumentPartNew.getContent();
 
 
-        //获取批注
-        Comments comments = addDocumentCommentsPart(wordMLPackageOld, oldFactory);
 
         //==========================对新旧文档内容进行对比======================
 
@@ -80,8 +106,6 @@ public class Util {
         }
         //用来保存中间结果
         HashMap<Integer, Integer> midResult = new HashMap<>();
-        //保存所有批注列表
-        List<Vo> diffList = new ArrayList<Vo>();
         while (i<oldCount){
             //把一个块转化为字符串，并去除空格
             String oldBlockString = blockToBigString(oldBlockMap.get(i+1), listOld);
@@ -93,7 +117,25 @@ public class Util {
                 BigInteger new64Hash = hashUnsigned(newBlockString);
                 if(old64Hash.equals(new64Hash)){  //如果两个块完全相同
                     //把结果先保存在中间结果map里面先
-                    midResult.put(i+1,j+1);
+                    midResult.put(j+1,i+1);
+
+                    Diff_match_patch.Diff mid =
+                            new Diff_match_patch
+                                    .Diff(Diff_match_patch.Operation.EQUAL,
+                                    blockToBigStringHaving(oldBlockMap.get(i+1), listOld));
+
+                    LinkedList<Diff_match_patch.Diff> hh = new LinkedList<>();
+                    hh.add(mid);
+                    System.out.println(hh);
+                    addComment.initSameParagraph(mid.text,j+1,factory_bin,p_bin,mainDocumentPart_bin);
+//                    commentId_bin=addComment.createComment(hh,
+//                            wordprocessingMLPackage_bin,
+//                            mainDocumentPart_bin,
+//                            factory_bin,
+//                            p_bin,
+//                            commentId_bin,
+//                            comments_bin,j+1);
+
                     count--;
                     j=0;
                     break;
@@ -105,13 +147,21 @@ public class Util {
             i++;
         }
 
+        System.out.println(midResult);
+
         //把块Map里相同的块去掉
         if(0 != midResult.size()){
             for (Map.Entry<Integer,Integer> m: midResult.entrySet()) {
-                Integer value = m.getValue();
-                Integer key = m.getKey();
-                oldBlockMap.remove(m.getKey());
-                newBlockMap.remove(m.getValue());
+//                Diff_match_patch.Diff diff = new Diff_match_patch.Diff(Diff_match_patch.Operation.EQUAL,m.);
+//                LinkedList<Diff_match_patch.Diff> objects = new LinkedList<>();
+//                objects.add(diff);
+//
+
+                Integer key = m.getKey();  //key是新的
+                Integer value = m.getValue();  //value是旧
+
+                oldBlockMap.remove(m.getValue());
+                newBlockMap.remove(m.getKey());
             }
         }
 
@@ -138,7 +188,7 @@ public class Util {
                 for (Map.Entry<Integer,Block> map:oldBlockMap.entrySet()) {
                     String block = blockToBigString(map.getValue(), listOld);
                     List<String> suggest = suggester.suggest(block, 1);
-                    numTonum.put(map.getValue().getKey(),Integer.parseInt(String.valueOf(suggest.get(0).charAt(0))));
+                    numTonum.put(Integer.parseInt(String.valueOf(suggest.get(0).charAt(0))),map.getValue().getKey());
                 }
             }else {
                 for (Map.Entry<Integer,Block> map: oldBlockMap.entrySet()) {
@@ -149,30 +199,82 @@ public class Util {
                 for (Map.Entry<Integer,Block> map:newBlockMap.entrySet()) {
                     String block = blockToBigString(map.getValue(), listNew);
                     List<String> suggest = suggester.suggest(block, 1);
-                    numTonum.put(Integer.parseInt(String.valueOf(suggest.get(0).charAt(0))),map.getValue().getKey());
+                    numTonum.put(map.getValue().getKey(),Integer.parseInt(String.valueOf(suggest.get(0).charAt(0))));
                 }
             }
             System.out.println(numTonum);
             for (Map.Entry<Integer,Integer> entry:numTonum.entrySet()) {
-                Integer oldOrder = entry.getKey();
-                Integer newOrder = entry.getValue();
+                Integer newOrder = entry.getKey();
+                Integer oldOrder = entry.getValue();
                 String s1 = blockToBigString(oldBlockMap.get(oldOrder), listOld);
                 String s2 = blockToBigString(newBlockMap.get(newOrder), listNew);
                 LinkedList<Diff_match_patch.Diff> t = dmp.diff_main(s1,s2);
                 t.get(0).setOldOrder(oldOrder);
                 t.get(0).setNewOrder(newOrder);
                 System.out.println("====================================================");
-                System.out.println("旧文档第"+ oldOrder +"块"+"和新文档第"+ newOrder + "块比较");
+                System.out.println("新文档第"+ newOrder +"块"+"和旧文档第"+ oldOrder + "块比较");
                 System.out.println(t);
                 System.out.println("============================================");
 
-                //继续对块信息进行移除移除
+                //cyb
+//                commentId_bin=addComment.createComment(t,
+//                        wordprocessingMLPackage_bin,
+//                        mainDocumentPart_bin,
+//                        factory_bin,
+//                        p_bin,
+//                        commentId_bin,
+//                        comments_bin,newOrder);
+//cyb
 
             }
-            if(oldBlockMap.size() > newBlockMap.size()){  //新文档较源文档删除了原文档那些块
+            if(oldBlockMap.size() >= newBlockMap.size()){  //新文档较源文档删除了原文档那些块
+                if(oldBlockMap.size() == newBlockMap.size()){
 
-            } else if (oldBlockMap.size() < newBlockMap.size()){   //旧文档较源文档删除了原文档那些块
+                }else {
+                    for (Map.Entry<Integer, Block> entry : oldBlockMap.entrySet()) {
+                        if (!numTonum.containsKey(entry.getKey())) {
 
+                            System.out.println("新文档较旧文档删除了原文的第" + entry.getKey() + "块");
+
+                            String oldstr = blockToBigString(entry.getValue(), listOld);
+                            Diff_match_patch.Diff diff1 = new Diff_match_patch.Diff(Diff_match_patch.Operation.OLDSURPLUS,oldstr);
+                            LinkedList<Diff_match_patch.Diff> dd = new LinkedList<>();
+                            dd.add(diff1);
+                            System.out.println(dd);
+                            System.out.println(">>>>>>>>>>>>>>>>>我是分割线>>>>>>>>>>>>");
+
+//                            commentId_bin=addComment.createComment(dd,wordprocessingMLPackage_bin,
+//                                    mainDocumentPart_bin,factory_bin,p_bin,commentId_bin,comments_bin,entry.getKey());
+
+                        }
+                    }
+                }
+            } else{   //新文档较源文档增加了那些块
+
+                for (Map.Entry<Integer, Block> entry : newBlockMap.entrySet()) {
+                    Integer key = entry.getKey();
+                    int tag = -1;
+                    for (Map.Entry<Integer,Integer> num:numTonum.entrySet()) {
+                        if(num.getValue().equals(key)){
+                            tag = 0;
+                        }
+                    }
+                    if(tag == -1){
+
+                        System.out.println("新文档较旧文档增加了第" + key + "块");
+                        String newStr = blockToBigString(entry.getValue(), listNew);
+                        LinkedList<Diff_match_patch.Diff> uu = new LinkedList<>();
+                        Diff_match_patch.Diff diff2 = new Diff_match_patch.Diff(Diff_match_patch.Operation.NEWSURPLUS,newStr);
+                        uu.add(diff2);
+                        System.out.println(diff2);
+                        System.out.println(uu);
+                        System.out.println(">>>>>>>>>>>>>>>>>我是分割线>>>>>>>>>>>>");
+//                        commentId_bin=addComment.createComment(uu,
+//                                wordprocessingMLPackage_bin,
+//                                mainDocumentPart_bin,factory_bin,p_bin,commentId_bin,comments_bin,key);
+
+                    }
+                }
             }
 
 
@@ -196,15 +298,19 @@ public class Util {
         }
 
 
+        //cyb
+        addComment.saveComment(wordprocessingMLPackage_bin,out);
+        //cyb
 
 
-        //保存文档
-        try {
-            writeDocxToStream(wordMLPackageOld, out);
-            System.out.println("已经把结果存到新文件了");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+//        //保存文档
+//        try {
+//            writeDocxToStream(wordMLPackageOld, out);
+//            System.out.println("已经把结果存到新文件了");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
 
 //        //遍历旧的每一个块并转化为字符串
@@ -270,95 +376,95 @@ public class Util {
     * */
 
 
-    private void getContent(String path1, String path2) throws Docx4JException {
-
-        String out = "F:/test/out.docx";
-
-        //读取旧文档的内容
-        WordprocessingMLPackage wordMLPackageOld = WordprocessingMLPackage.load(new File(path1));
-        MainDocumentPart mainDocumentPartOld = wordMLPackageOld.getMainDocumentPart();
-        List<Object> listOld = mainDocumentPartOld.getContent();
-        System.out.println(getLineNumber(listOld));
-        Map<Integer, Block> blockMap1 = getBlock(listOld);  //获取块
-        String string1 = blockToBigString(blockMap1.get(2), listOld);
-
-//        for(Object o:listOld){
+//    private void getContent(String path1, String path2) throws Docx4JException {
 //
-//                System.out.println(o);
+//        String out = "F:/test/out.docx";
 //
-//        }
-//        Map<Integer, Block> result = getBlock(listOld);
-//        for (Map.Entry<Integer, Block> entry : result.entrySet()) {
-//            //Map.entry<Integer,String> 映射项（键-值对）  有几个方法：用上面的名字entry
-//            //entry.getKey() ;entry.getValue(); entry.setValue();
-//            //map.entrySet()  返回此映射中包含的映射关系的 Set视图。
-//            System.out.println("key= " + entry.getKey() + " and value= "
-//                    + entry.getValue());
-//        }
-
-        //读取新文档的内容
-        WordprocessingMLPackage wordMLPackageNew = WordprocessingMLPackage.load(new File(path2));
-        MainDocumentPart mainDocumentPartNew = wordMLPackageNew.getMainDocumentPart();
-        List<Object> listNew = mainDocumentPartNew.getContent();
-        System.out.println(getLineNumber(listNew));
-        Map<Integer, Block> blockMap2 = getBlock(listNew);  //获取块
-        String string2 = blockToBigString(blockMap2.get(2), listNew);
-
-
-        //=========================比较相似度start===================================
+//        //读取旧文档的内容
+//        WordprocessingMLPackage wordMLPackageOld = WordprocessingMLPackage.load(new File(path1));
+//        MainDocumentPart mainDocumentPartOld = wordMLPackageOld.getMainDocumentPart();
+//        List<Object> listOld = mainDocumentPartOld.getContent();
+//        System.out.println(getLineNumber(listOld));
+//        Map<Integer, Block> blockMap1 = getBlock(listOld);  //获取块
+//        String string1 = blockToBigString(blockMap1.get(2), listOld);
 //
-//        double similarity = SimilarityUtil.getSimilarity(string1, string2);
-//        System.out.println(similarity);
-
-        //============================相似度比较end================================
-
-
-        //===============================匹配规则===============================
-
-        //匹配规则
-        Diff_match_patch dmp = new Diff_match_patch();
-        //找到两个文本之间的差异
-        LinkedList<Diff_match_patch.Diff> t = dmp.diff_main(string1.toString(), string2.toString());
-
-        System.out.println(t);
-
-        //================================匹配end=============================
-
-        //===========================测试代码=============
-//        P p0 = (P) list.get(1);
-//        List<Object> content = p0.getContent();
-//        R r = (R) content.get(0);
-//        int pContentSize = content.size();
-//        RPr fontRPr = new RPr();
-//        fontRPr = r.getRPr();
-//        System.out.println(fontRPr);
-
-
-//        遍历每一行的内容，去掉每行为空的行
-//        for(Object o:listOld){
-//            if(!"".equals(o.toString().trim())){
-//                P p0 = (P) o;
-//                String s0 = p0.toString();//把一个段落对象变成字符串
-//                //去除字符串里面的空格
-//                s0 = s0.replace(" ", "");
-//                System.out.println(s0);
-//                //匹配规则
-////                Diff_match_patch dmp = new Diff_match_patch();
-////                LinkedList<Diff> t = dmp.diff_main(s0,s1);
-//            }
+////        for(Object o:listOld){
+////
+////                System.out.println(o);
+////
+////        }
+////        Map<Integer, Block> result = getBlock(listOld);
+////        for (Map.Entry<Integer, Block> entry : result.entrySet()) {
+////            //Map.entry<Integer,String> 映射项（键-值对）  有几个方法：用上面的名字entry
+////            //entry.getKey() ;entry.getValue(); entry.setValue();
+////            //map.entrySet()  返回此映射中包含的映射关系的 Set视图。
+////            System.out.println("key= " + entry.getKey() + " and value= "
+////                    + entry.getValue());
+////        }
+//
+//        //读取新文档的内容
+//        WordprocessingMLPackage wordMLPackageNew = WordprocessingMLPackage.load(new File(path2));
+//        MainDocumentPart mainDocumentPartNew = wordMLPackageNew.getMainDocumentPart();
+//        List<Object> listNew = mainDocumentPartNew.getContent();
+//        System.out.println(getLineNumber(listNew));
+//        Map<Integer, Block> blockMap2 = getBlock(listNew);  //获取块
+//        String string2 = blockToBigString(blockMap2.get(2), listNew);
+//
+//
+//        //=========================比较相似度start===================================
+////
+////        double similarity = SimilarityUtil.getSimilarity(string1, string2);
+////        System.out.println(similarity);
+//
+//        //============================相似度比较end================================
+//
+//
+//        //===============================匹配规则===============================
+//
+//        //匹配规则
+//        Diff_match_patch dmp = new Diff_match_patch();
+//        //找到两个文本之间的差异
+//        LinkedList<Diff_match_patch.Diff> t = dmp.diff_main(string1.toString(), string2.toString());
+//
+//        System.out.println(t);
+//
+//        //================================匹配end=============================
+//
+//        //===========================测试代码=============
+////        P p0 = (P) list.get(1);
+////        List<Object> content = p0.getContent();
+////        R r = (R) content.get(0);
+////        int pContentSize = content.size();
+////        RPr fontRPr = new RPr();
+////        fontRPr = r.getRPr();
+////        System.out.println(fontRPr);
+//
+//
+////        遍历每一行的内容，去掉每行为空的行
+////        for(Object o:listOld){
+////            if(!"".equals(o.toString().trim())){
+////                P p0 = (P) o;
+////                String s0 = p0.toString();//把一个段落对象变成字符串
+////                //去除字符串里面的空格
+////                s0 = s0.replace(" ", "");
+////                System.out.println(s0);
+////                //匹配规则
+//////                Diff_match_patch dmp = new Diff_match_patch();
+//////                LinkedList<Diff> t = dmp.diff_main(s0,s1);
+////            }
+////        }
+//
+//        //==============================end==============
+//
+//
+//        //保存文档
+//        try {
+//            writeDocxToStream(wordMLPackageOld, out);
+//            System.out.println("已经把结果存到新文件了");
+//        } catch (IOException e) {
+//            e.printStackTrace();
 //        }
-
-        //==============================end==============
-
-
-        //保存文档
-        try {
-            writeDocxToStream(wordMLPackageOld, out);
-            System.out.println("已经把结果存到新文件了");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    }
 
 
     //把结果输出到新文档
@@ -524,6 +630,29 @@ public class Util {
 
 
     /*
+     * 把一个块转化为字符串，保留空格
+     * */
+    private String blockToBigStringHaving(Block block, List list) {
+        Integer a = block.getFirst();
+        Integer b = block.getLast();
+        if (null == a || null == b) return null;
+        int first = a.intValue();
+        int last = b.intValue();
+        StringBuffer sBuffer = new StringBuffer();
+        while (first <= last) {
+            if (first == last) {
+                sBuffer.append(list.get(first - 1).toString());
+                first++;
+            } else {
+                sBuffer.append(list.get(first - 1).toString());
+                first++;
+            }
+        }
+        return sBuffer.toString();
+    }
+
+
+    /*
      * 把一个块转化为字符串，并去除空格
      * */
     private String blockToBigString(Block block, List list) {
@@ -620,6 +749,8 @@ public class Util {
         long lowValue = value & 0x7fffffffffffffffL;
         return BigInteger.valueOf(lowValue).add(BigInteger.valueOf(Long.MAX_VALUE)).add(BigInteger.valueOf(1));
     }
+
+
 
     /**
      * 返回无符号murmur hash值

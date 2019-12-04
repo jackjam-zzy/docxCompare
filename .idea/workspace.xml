@@ -2,20 +2,53 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="02793285-510f-4c22-8b6b-2be113348aad" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/mid/OrderMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/CompareApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/atomic/AtomicFloat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/controller/CompareController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/msg/Word.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/util/AddComment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/util/CosineSimilarity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/stopword.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zzy/compare/msg/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/msg/Block.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zzy/compare/enums/Operation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zzy/compare/mid/Diff.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/zzy/compare/util/Diff_match_patch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/util/Diff_match_patch.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/zzy/compare/util/Util.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/util/Util.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zzy/compare/msg/Block.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/zzy/compare/msg/Block.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zzy/compare/util/ZzySimHash.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/util/ZzySimHash.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zzy/compare/vo/Vo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zzy/compare/vo/Vo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/zzy/compare/enums/Operation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/zzy/compare/mid/Diff.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/zzy/compare/util/Diff_match_patch$Diff.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/zzy/compare/util/Diff_match_patch$Diff.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/zzy/compare/util/Diff_match_patch$Operation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/zzy/compare/util/Diff_match_patch$Operation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/zzy/compare/util/Diff_match_patch$Patch.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/zzy/compare/util/Diff_match_patch$Patch.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/zzy/compare/util/Diff_match_patch.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/zzy/compare/util/Diff_match_patch.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/zzy/compare/util/Util.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/zzy/compare/util/Util.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/zzy/compare/util/ZzySimHash.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/zzy/compare/util/ZzySimHash.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/zzy/compare/vo/Vo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/zzy/compare/vo/Vo.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="compare" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -43,6 +76,9 @@
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.zzy.compare.util" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\ideaproject\compare\src\main\resources" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -57,6 +93,19 @@
     </option>
   </component>
   <component name="RunManager" selected="Application.MD5">
+    <configuration name="CosineSimilarity" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.zzy.compare.util.CosineSimilarity" />
+      <module name="compare" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.zzy.compare.util.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="MD5" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.zzy.compare.MD5" />
       <module name="compare" />
@@ -90,9 +139,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestHanLP" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="TestHanLP" />
+    <configuration name="ZzySimHash" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.zzy.compare.util.ZzySimHash" />
       <module name="compare" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.zzy.compare.util.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -100,9 +155,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.MD5" />
+        <item itemvalue="Application.CosineSimilarity" />
+        <item itemvalue="Application.ZzySimHash" />
         <item itemvalue="Application.Main" />
         <item itemvalue="Application.SimHash" />
-        <item itemvalue="Application.TestHanLP" />
       </list>
     </recent_temporary>
   </component>
@@ -127,6 +183,11 @@
       <workItem from="1574815567830" duration="4931000" />
       <workItem from="1574902014351" duration="25516000" />
       <workItem from="1574988244393" duration="23334000" />
+      <workItem from="1575078398665" duration="5131000" />
+      <workItem from="1575246452788" duration="12239000" />
+      <workItem from="1575274525940" duration="23229000" />
+      <workItem from="1575357495702" duration="5863000" />
+      <workItem from="1575419533046" duration="4390000" />
     </task>
     <servers />
   </component>
@@ -138,13 +199,34 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/zzy/compare/util/AddComment.java</url>
+          <line>775</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/zzy/compare/util/ZzySimHash.java</url>
+          <line>394</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/zzy/compare/util/Util.java</url>
+          <line>113</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="t.get(6)" />
@@ -152,6 +234,7 @@
         <watch expression="t.get(8)" />
         <watch expression="((TreeMap.Entry)((TreeMap)((PinyinScorer)suggester.scorerList.get(2)).storage).entrySet().toArray()[0]).getValue()" custom="java.util.TreeMap,java.util.TreeMap.Entry,com.hankcs.hanlp.suggest.scorer.pinyin.PinyinScorer" />
         <watch expression="oldCount" />
+        <watch expression="i" />
       </configuration>
     </watches-manager>
   </component>
